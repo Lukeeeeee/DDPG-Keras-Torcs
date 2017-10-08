@@ -7,7 +7,6 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.optimizers import Adam
 import tensorflow as tf
-from keras.engine.training import collect_trainable_weights
 import json
 
 from ReplayBuffer import ReplayBuffer
@@ -18,7 +17,7 @@ import timeit
 
 OU = OU()       #Ornstein-Uhlenbeck Process
 
-def playGame(train_indicator=0):    #1 means Train, 0 means simply Run
+def playGame(train_indicator=1):    #1 means Train, 0 means simply Run
     BUFFER_SIZE = 100000
     BATCH_SIZE = 32
     GAMMA = 0.99
@@ -31,7 +30,7 @@ def playGame(train_indicator=0):    #1 means Train, 0 means simply Run
 
     np.random.seed(1337)
 
-    vision = False
+    vision = True
 
     EXPLORE = 100000.
     episode_count = 2000

@@ -118,7 +118,7 @@ def bargraph(x,mn,mx,w,c=u'X'):
     return u'[%s]' % (nnc+npc+ppc+pnc)
 
 class Client(object):
-    def __init__(self,H=None,p=None,i=None,e=None,t=None,s=None,d=None,vision=False):
+    def __init__(self,H=None,p=None,i=None,e=None,t=None,s=None,d=None,vision=True):
         # If you don't like the option defaults,  change them here.
         self.vision = vision
 

@@ -226,7 +226,6 @@ class TorcsEnv:
 
         return torcs_action
 
-
     def obs_vision_to_image_rgb(self, obs_image_vec):
         image_vec =  obs_image_vec
         r = image_vec[0:len(image_vec):3]
@@ -234,9 +233,22 @@ class TorcsEnv:
         b = image_vec[2:len(image_vec):3]
 
         sz = (64, 64)
-        r = np.array(r).reshape(sz)
-        g = np.array(g).reshape(sz)
-        b = np.array(b).reshape(sz)
+        # r = np.array(r).reshape(sz)
+        # g = np.array(g).reshape(sz)
+        # b = np.array(b).reshape(sz)
+        im = []
+        for r_i, g_i, b_i in zip(r, g, b):
+            im.append([r_i, g_i, b_i])
+        im = np.array(im, dtype=np.uint8)
+        im = np.reshape(im, [64, 64, 3])
+
+        from PIL import Image
+        from random import uniform
+        a = Image.fromarray(im)
+        a = a.rotate(180)
+        id = uniform(1, 100000)
+        a.save('./img/' + str(id) + '.jpg')
+        a.close()
         return np.array([r, g, b], dtype=np.uint8)
 
     def make_observaton(self, raw_obs):
@@ -272,12 +284,13 @@ class TorcsEnv:
             Observation = col.namedtuple('Observaion', names)
 
             # Get RGB from observation
-            image_rgb = self.obs_vision_to_image_rgb(raw_obs[names[8]])
+            image_rgb = self.obs_vision_to_image_rgb(raw_obs[names[10]])
 
             return Observation(focus=np.array(raw_obs['focus'], dtype=np.float32)/200.,
                                speedX=np.array(raw_obs['speedX'], dtype=np.float32)/self.default_speed,
                                speedY=np.array(raw_obs['speedY'], dtype=np.float32)/self.default_speed,
                                speedZ=np.array(raw_obs['speedZ'], dtype=np.float32)/self.default_speed,
+                               angle=np.array(raw_obs['angle'], dtype=np.float32) / 3.1416,
                                opponents=np.array(raw_obs['opponents'], dtype=np.float32)/200.,
                                rpm=np.array(raw_obs['rpm'], dtype=np.float32),
                                track=np.array(raw_obs['track'], dtype=np.float32)/200.,
